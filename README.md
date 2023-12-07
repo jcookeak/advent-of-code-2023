@@ -1,6 +1,10 @@
 # Advent of Code 2023
 Tackling Advent of Code with Kotlin.
 
+[![Check Formatting](https://github.com/jcookeak/advent-of-code-2023/actions/workflows/linter.yml/badge.svg)](https://github.com/jcookeak/advent-of-code-2023/actions/workflows/linter.yml)
+
+[![Solutions Tests](https://github.com/jcookeak/advent-of-code-2023/actions/workflows/validate.yml/badge.svg?branch=solutions)](https://github.com/jcookeak/advent-of-code-2023/actions/workflows/validate.yml)
+
 ## Branches
 This repository is split into two primary branches:
 ### main
