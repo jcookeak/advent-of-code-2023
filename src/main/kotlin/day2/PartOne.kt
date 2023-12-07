@@ -35,6 +35,10 @@ fun part1(
 ): Sequence<Int> =
     input.parseLines(::parse)
         .filter { game ->
-            TODO()
+            game.sets.all { colors ->
+                colors.red <= prompt.red &&
+                    colors.green <= prompt.green &&
+                    colors.blue <= prompt.blue
+            }
         }
         .map { it.id }

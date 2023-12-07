@@ -1,6 +1,7 @@
 package day2
 
 import util.parseLines
+import kotlin.math.max
 
 /**
  * The Elf says they've stopped producing snow because they aren't getting any water! He isn't sure why the water stopped; however, he can show you how to get to the water source to check it out for yourself. It's just up ahead!
@@ -27,5 +28,11 @@ fun partTwo(input: String) =
     input
         .parseLines(::parse)
         .map { game ->
-            TODO()
+            game.sets.fold(Colors()) { acc, set ->
+                Colors(
+                    red = max(acc.red, set.red),
+                    green = max(acc.green, set.green),
+                    blue = max(acc.blue, set.blue),
+                )
+            }
         }

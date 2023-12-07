@@ -10,13 +10,11 @@ fun parse(line: String): Game =
                 sets.split(";")
                     .map { set ->
                         set
-                            .split(",")
-                            .map { cube ->
+                            .split(",").associate { cube ->
                                 cube.trim().splitOn(" ").let { (number, color) ->
                                     Game.Color.valueOf(color.uppercase()) to number.toInt()
                                 }
                             }
-                            .toMap()
                     }
                     .map {
                         Colors(

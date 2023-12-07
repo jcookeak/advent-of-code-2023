@@ -22,7 +22,8 @@ fun partTwo(input: String): Sequence<Int> =
     input.parseLines(::parse)
         .map { "${it.first()}${it.last()}".toInt() }
 
-fun parse(line: String): List<Int> = line.fold(ParseAcc()) { acc, c ->
+fun parse(line: String): List<Int> =
+    line.fold(ParseAcc()) { acc, c ->
         (acc.pointer + c).numberOrNull()?.let {
             ParseAcc(
                 acc.numbers + it,
