@@ -28,4 +28,4 @@ import util.parseLines
  */
 fun partOne(input: String): Sequence<Int> =
     input
-        .parseLines { line -> TODO() }
+        .parseLines { line -> "${line.first { it.isDigit() }}${line.last { it.isDigit() }}".toInt() }

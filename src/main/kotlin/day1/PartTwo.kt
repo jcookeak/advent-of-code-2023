@@ -20,9 +20,36 @@ import util.parseLines
  */
 fun partTwo(input: String): Sequence<Int> =
     input.parseLines(::parse)
-        .map { TODO() }
+        .map { "${it.first()}${it.last()}".toInt() }
 
-fun parse(line: String): List<Int> = TODO()
+fun parse(line: String): List<Int> = line.fold(ParseAcc()) { acc, c ->
+        (acc.pointer + c).numberOrNull()?.let {
+            ParseAcc(
+                acc.numbers + it,
+                "$c",
+            )
+        } ?: acc.copy(
+            pointer = acc.pointer + c,
+        )
+    }
+        .numbers
+
+private data class ParseAcc(
+    val numbers: List<Int> = emptyList(),
+    val pointer: String = "",
+)
+
+private fun String.numberOrNull(): Int? =
+    numbers.firstNotNullOfOrNull { (key, value) ->
+        if (
+            (this.toIntOrNull()?.let { "$it".last() } ?: this).toString()
+                .contains(key)
+        ) {
+            value
+        } else {
+            null
+        }
+    }
 
 private val numbers =
     mapOf(
