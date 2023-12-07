@@ -33,5 +33,11 @@ package day3
 fun part1(input: String): List<PartNumber> =
     parse(input)
         .let { schematic ->
-            TODO()
+            schematic.symbols.flatMap { symbol ->
+                schematic.parts
+                    .filter { it.line in listOf(symbol.y - 1, symbol.y, symbol.y + 1) }
+                    .filter { ((it.index.start - 1)..(it.index.end + 1)).contains(symbol.x) }
+            }
+                .toSet()
+                .toList()
         }

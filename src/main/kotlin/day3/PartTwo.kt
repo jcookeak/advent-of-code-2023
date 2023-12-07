@@ -32,5 +32,13 @@ package day3
 fun part2(input: String): Sequence<List<PartNumber>> =
     parse(input)
         .let { schematic ->
-            TODO()
+            schematic.symbols
+                .asSequence()
+                .filter { it.symbol == "*" }
+                .map { symbol ->
+                    schematic.parts
+                        .filter { it.line in listOf(symbol.y - 1, symbol.y, symbol.y + 1) }
+                        .filter { ((it.index.start - 1)..(it.index.end + 1)).contains(symbol.x) }
+                }
+                .filter { it.size == 2 }
         }
