@@ -22,8 +22,7 @@ fun partTwo(input: String): Sequence<Int> =
     input.parseLines(::parse)
         .map { TODO() }
 
-fun parse(line: String): List<Int> =
-    TODO()
+fun parse(line: String): List<Int> = TODO()
 
 private val numbers =
     mapOf(
