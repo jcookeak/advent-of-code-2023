@@ -40,5 +40,12 @@ import util.parseLines
 fun part1(input: String) =
     input.parseLines(::parse)
         .map { card ->
-            TODO()
+            card.winning
+                .intersect(card.yours)
+                .fold(0) { acc, i ->
+                    when (acc) {
+                        0 -> 1
+                        else -> acc * 2
+                    }
+                }
         }

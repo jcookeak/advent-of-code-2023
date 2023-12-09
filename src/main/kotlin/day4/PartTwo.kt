@@ -40,14 +40,47 @@ fun part2(input: String) =
  */
 fun Sequence<Card>.step1(): Map<Int, List<Int>> =
     this.map { card ->
-        TODO()
+        card.id to (
+            card.winning.intersect(card.yours).size
+                .takeIf { it > 0 }
+                ?.let {
+                    (1..it).map { card.id + it }
+                } ?: emptyList()
+        )
     }
         .toMap()
 
 /**
  * computes a map of winning number to number of times that number has won after expanding copies
  */
-fun Map<Int, List<Int>>.step2(): Map<Int, Int> =
-    this.let { lookup ->
-        TODO()
-    }
+fun Map<Int, List<Int>>.step2() =
+    expandChain(this)
+        .groupBy { it }
+        .map { (key, value) -> key to value.size }
+        .toMap()
+
+/**
+ * recursively lookup copies and accumulate them
+ *
+ * e.g.
+ * given {1=[2, 3, 4, 5], 2=[3, 4], 3=[4, 5], 4=[5], 5=[], 6=[]}
+ * expanding 3 would result in [3, 4, 5, 5]
+ */
+private fun expandChain(lookup: Map<Int, List<Int>>): List<Int> {
+    val memoized = mutableMapOf<Int, List<Int>>()
+
+    /**
+     * expands chain and memoizes result for performance reasons
+     */
+    fun computeChain(i: Int): List<Int> =
+        memoized.getOrPut(i) {
+            (lookup[i] ?: emptyList()).flatMap {
+                listOf(it) + computeChain(it)
+            }
+        }
+
+    return lookup.keys.sortedDescending().sortedDescending()
+        .flatMap {
+            listOf(it) + computeChain(it)
+        }
+}
