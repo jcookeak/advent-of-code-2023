@@ -5,5 +5,5 @@ fun String.splitOn(value: String): Pair<String, String> =
         .let { split ->
             split.takeIf { it.size == 2 }
                 ?.let { it[0] to it[1] }
-                ?: error("expected exactly 2 lists not ${split.size}")
+                ?: error("expected exactly 2 lists not ${split.size} '$this'")
         }
