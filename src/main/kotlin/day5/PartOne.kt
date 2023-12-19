@@ -100,6 +100,19 @@ fun partOne(input: String): List<Long> =
         .let { almanac ->
             almanac.seeds
                 .map { seed ->
-                    TODO()
+                    almanac.ranges.fold(seed) { currentSeed, range ->
+                        range.lookup(currentSeed)
+                    }
                 }
         }
+
+private fun List<RangeDelta>.lookup(key: Long): Long =
+    (
+        this.firstOrNull { range ->
+            key in range
+        }
+            ?.let { matching ->
+                key + matching.delta
+            }
+            ?: key
+    )

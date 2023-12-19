@@ -19,7 +19,7 @@ class SplitOnSpec : FunSpec({
                 "a b".splitOn(":")
             }
                 .assert {
-                    message shouldBe "expected exactly 2 lists not 1"
+                    message shouldBe "expected exactly 2 lists not 1 'a b'"
                 }
         }
 
@@ -28,7 +28,7 @@ class SplitOnSpec : FunSpec({
                 "a:b:c".splitOn(":")
             }
                 .assert {
-                    message shouldBe "expected exactly 2 lists not 3"
+                    message shouldBe "expected exactly 2 lists not 3 'a:b:c'"
                 }
         }
     }

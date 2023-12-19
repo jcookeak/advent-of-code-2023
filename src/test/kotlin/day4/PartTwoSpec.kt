@@ -17,7 +17,7 @@ class PartTwoSpec : FunSpec({
             Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
             Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
             """.trimIndent(),
-        ) shouldBe 30
+        ).values.sum() shouldBe 30
     }
 
     context("step 1") {
@@ -73,7 +73,6 @@ class PartTwoSpec : FunSpec({
                 .parseLines(::parse)
                 .step1()
                 .step2()
-                .also { println(it) }
                 .assert {
                     this[1] shouldBe 1
                     this[2] shouldBe 2
@@ -81,7 +80,6 @@ class PartTwoSpec : FunSpec({
                     this[4] shouldBe 8
                     this[5] shouldBe 14
                     this[6] shouldBe 1
-
                     this.values.sum() shouldBe 30
                 }
         }

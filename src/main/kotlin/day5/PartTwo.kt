@@ -20,6 +20,66 @@ suspend fun partTwo(input: String): List<LongRange> =
     coroutineScope {
         parse(input)
             .let { almanac ->
-                TODO()
+                almanac.seeds.chunked(2)
+                    .map { (start, length) -> (start until (start + length)) }
+                    .let { seedRanges ->
+                        almanac.ranges.fold(seedRanges) { mapped, level ->
+                            mapped.map { value ->
+                                async {
+                                    level.applyMapping(value)
+                                }
+                            }
+                                .awaitAll()
+                                .flatten()
+                        }
+                    }
             }
     }
+
+data class Split(
+    val outsideStart: LongRange? = null,
+    val overlap: LongRange? = null,
+    val outsideEnd: LongRange? = null,
+)
+
+infix fun LongRange.minCommon(other: LongRange): Long? =
+    kotlin.math.max(first, other.first)
+        .takeIf { it in this }
+        ?.takeIf { it in other }
+
+infix fun LongRange.maxCommon(other: LongRange): Long? =
+    kotlin.math.min(last, other.last)
+        .takeIf { it in this }
+        ?.takeIf { it in other }
+
+infix fun LongRange.overlap(other: LongRange): Split {
+    val maxCommon = this maxCommon other
+    val minCommon = this minCommon other
+
+    return Split(
+        (minCommon?.let { first until minCommon } ?: this.takeIf { last <= other.first })
+            ?.takeIf { it.first <= it.last },
+        (
+            minCommon?.let {
+                maxCommon?.let {
+                    minCommon..maxCommon
+                }
+            }
+        )?.takeIf { it.first <= it.last },
+        (maxCommon?.let { (maxCommon + 1)..endInclusive } ?: this.takeIf { first >= other.last })
+            ?.takeIf { it.first <= it.last },
+    )
+}
+
+private fun List<RangeDelta>.applyMapping(range: LongRange): List<LongRange> =
+    this
+        .fold<RangeDelta, Pair<List<LongRange>, LongRange?>>(emptyList<LongRange>() to range) { (acc, remaining), rangeDelta ->
+            (remaining?.overlap(rangeDelta.range))?.let {
+                acc +
+                    listOfNotNull(
+                        it.outsideStart,
+                        it.overlap?.let { it.first + rangeDelta.delta..it.last + rangeDelta.delta },
+                    ) to it.outsideEnd
+            } ?: return acc
+        }
+        .let { (mapped, remaining) -> mapped + listOfNotNull(remaining) }
