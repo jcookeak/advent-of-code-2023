@@ -42,7 +42,7 @@ fun part1(input: String) =
         .map { card ->
             card.winning
                 .intersect(card.yours)
-                .fold(0) { acc, i ->
+                .fold(0) { acc, _ ->
                     when (acc) {
                         0 -> 1
                         else -> acc * 2

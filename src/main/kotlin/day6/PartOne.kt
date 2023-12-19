@@ -49,13 +49,36 @@ fun partOne(input: String): List<RaceResults> =
     parsePartOne(input)
         .let { records ->
             measureTimedValue {
-                TODO()
+                records
+                    .process()
             }
                 .also {
                     println("took ${it.duration}")
                 }
                 .value
         }
+
+private fun List<RaceRecord>.process() =
+    this.map { recordToBeat ->
+        ((0 until recordToBeat.time / 2).reversed() to (recordToBeat.time / 2..recordToBeat.time)).let { (lhs, rhs) ->
+            listOf(lhs.aboveThreshold(recordToBeat), rhs.aboveThreshold(recordToBeat))
+                .flatten()
+        }
+            .let { RaceResults(recordToBeat.time, it) }
+    }
+
+private fun LongProgression.aboveThreshold(recordToBeat: RaceRecord): List<RaceScore> =
+    this.fold(emptyList()) { acc, timeToHold ->
+        RaceScore(
+            timeToHold,
+            distance = (recordToBeat.time - timeToHold) * timeToHold,
+        )
+            .takeIf { it.distance > recordToBeat.distance }
+            ?.let {
+                acc + it
+            }
+            ?: return acc
+    }
 
 fun parsePartOne(input: String): List<RaceRecord> =
     input.parseLines {

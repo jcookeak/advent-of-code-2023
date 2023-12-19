@@ -22,13 +22,32 @@ fun partTwo(input: String): LongRange =
     parsePartTwo(input)
         .let { record ->
             measureTimedValue {
-                TODO()
+                record
+                    .process()
             }
                 .also {
                     println("took ${it.duration}")
                 }
                 .value
         }
+
+/**
+ * Double pointer technique to start at edges of range and process until we find a point where we beat the threshold.
+ * These points become our range where all values inside the range will beat the record
+ */
+private fun RaceRecord.process() =
+    ((0 until time / 2) to (time / 2..time).reversed()).let { (lhs, rhs) ->
+        lhs.findFirstInstance(this).timeHeld..rhs.findFirstInstance(this).timeHeld
+    }
+
+fun LongProgression.findFirstInstance(recordToBeat: RaceRecord): RaceScore =
+    this.firstNotNullOf { timeToHold ->
+        RaceScore(
+            timeToHold,
+            distance = (recordToBeat.time - timeToHold) * timeToHold,
+        )
+            .takeIf { it.distance > recordToBeat.distance }
+    }
 
 fun parsePartTwo(input: String): RaceRecord =
     input.parseLines {
